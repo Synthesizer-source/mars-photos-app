@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Mars</string>
+    <string name="curiosity">Curiosity</string>
+    <string name="opportunity">Opportunity</string>
+    <string name="spirit">Spirit</string>
+    <string name="mars_rover_photos">Mars Rover Photos</string>
 </resources>
