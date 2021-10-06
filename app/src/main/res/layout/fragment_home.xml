@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -48,12 +50,15 @@
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/photos"
+        android:id="@+id/photoList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:animateLayoutChanges="false"
         android:background="@color/gray"
-        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+        android:layoutAnimation="@null"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rovers"
-        app:spanCount="2" />
+        app:spanCount="2"
+        tools:listitem="@layout/item_photo_list" />
 </androidx.constraintlayout.widget.ConstraintLayout>
