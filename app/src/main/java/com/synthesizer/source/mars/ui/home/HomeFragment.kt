@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.synthesizer.source.mars.data.api.ApiService
+import com.synthesizer.source.mars.data.remote.PhotoListResponse
 import com.synthesizer.source.mars.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
@@ -17,6 +18,8 @@ import javax.inject.Inject
 class HomeFragment : Fragment() {
 
     private val binding by lazy { FragmentHomeBinding.inflate(LayoutInflater.from(context)) }
+
+    val photoListAdapter = PhotoListAdapter()
 
     @Inject
     lateinit var service: ApiService
@@ -32,26 +35,28 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.photoList.apply {
-            adapter = PhotoListAdapter()
+            adapter = photoListAdapter
             if (itemDecorationCount == 0) addItemDecoration(PhotoDecoration())
         }
     }
 
     override fun onStart() {
         super.onStart()
-        service.getPhotos().enqueue(object : Callback<HashMap<String, Any>> {
+        service.getPhotos("curiosity", 1).enqueue(object : Callback<PhotoListResponse> {
             override fun onResponse(
-                call: Call<HashMap<String, Any>>,
-                response: Response<HashMap<String, Any>>
+                call: Call<PhotoListResponse>,
+                response: Response<PhotoListResponse>
             ) {
                 if (response.isSuccessful) {
                     println(response.body())
+                    photoListAdapter.addData(response.body()!!.photos)
                 }
             }
 
-            override fun onFailure(call: Call<HashMap<String, Any>>, t: Throwable) {
+            override fun onFailure(call: Call<PhotoListResponse>, t: Throwable) {
                 println(t.message)
             }
+
         })
     }
 }
