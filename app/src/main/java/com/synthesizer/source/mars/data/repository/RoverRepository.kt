@@ -1,13 +1,14 @@
 package com.synthesizer.source.mars.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import com.synthesizer.source.mars.data.api.ApiService
-import kotlinx.coroutines.flow.flow
+import com.synthesizer.source.mars.data.source.PhotoListPagingSource
 import javax.inject.Inject
 
 class RoverRepository @Inject constructor(private val service: ApiService) {
 
-    suspend fun fetchPhotos(roverName: String, page: Int) = flow {
-        val data = service.getPhotos("curiosity", 1).body()!!
-        emit(data)
-    }
+    fun fetchPhotoList(roverName: String, page: Int) = Pager(PagingConfig(pageSize = 25)) {
+        PhotoListPagingSource(service)
+    }.flow
 }

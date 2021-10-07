@@ -12,9 +12,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private val binding by lazy { FragmentHomeBinding.inflate(LayoutInflater.from(context)) }
+    private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
 
-    val photoListAdapter = PhotoListAdapter()
+    private val photoListAdapter = PhotoListAdapter()
 
     private val viewModel: HomeViewModel by viewModels()
 
@@ -37,7 +37,7 @@ class HomeFragment : Fragment() {
 
     private fun observe() {
         viewModel.photoList.observe(viewLifecycleOwner, {
-            photoListAdapter.addData(it.photos)
+            photoListAdapter.submitData(lifecycle, it)
         })
     }
 }

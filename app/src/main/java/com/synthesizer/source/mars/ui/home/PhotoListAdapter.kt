@@ -2,36 +2,40 @@ package com.synthesizer.source.mars.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.synthesizer.source.mars.data.remote.PhotoResponse
 import com.synthesizer.source.mars.databinding.ItemPhotoListBinding
-import com.synthesizer.source.mars.ui.home.PhotoListAdapter.ViewHolder
 import com.synthesizer.source.mars.util.load
 
-class PhotoListAdapter : RecyclerView.Adapter<ViewHolder>() {
-
-    private val photos = mutableListOf<PhotoResponse>()
+class PhotoListAdapter :
+    PagingDataAdapter<PhotoResponse, PhotoListAdapter.ViewHolder>(DIFF) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemPhotoListBinding.inflate(LayoutInflater.from(parent.context))
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = ItemPhotoListBinding.inflate(inflater)
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(photos[position])
+        getItem(position)?.let { holder.bind(it) }
     }
-
-    fun addData(newPhotos: List<PhotoResponse>) {
-        photos.addAll(newPhotos)
-        notifyItemRangeChanged(photos.size - newPhotos.size, newPhotos.size)
-    }
-
-    override fun getItemCount() = photos.size
 
     class ViewHolder(private val binding: ItemPhotoListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PhotoResponse) {
             binding.photo.load(item.imgSrc)
+        }
+    }
+
+    object DIFF : DiffUtil.ItemCallback<PhotoResponse>() {
+        override fun areItemsTheSame(oldItem: PhotoResponse, newItem: PhotoResponse): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: PhotoResponse, newItem: PhotoResponse): Boolean {
+            return oldItem.toString() == newItem.toString()
         }
     }
 }
