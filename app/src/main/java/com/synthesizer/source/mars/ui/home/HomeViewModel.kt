@@ -4,14 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.synthesizer.source.mars.data.api.ApiService
 import com.synthesizer.source.mars.data.remote.PhotoListResponse
+import com.synthesizer.source.mars.data.repository.RoverRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val service: ApiService) : ViewModel() {
+class HomeViewModel @Inject constructor(private val repository: RoverRepository) : ViewModel() {
 
     private var _photoList = MutableLiveData<PhotoListResponse>()
     val photoList: LiveData<PhotoListResponse> = _photoList
@@ -21,10 +22,8 @@ class HomeViewModel @Inject constructor(private val service: ApiService) : ViewM
     }
 
     private fun fetchPhotos() = viewModelScope.launch {
-        try {
-            val data = service.getPhotos("curiosity", 1).body()!!
-            _photoList.value = data
-        } catch (exception: Exception) {
+        repository.fetchPhotos("curiosity", 1).collect {
+            _photoList.value = it
         }
     }
 }
