@@ -11,6 +11,7 @@ interface ApiService {
     suspend fun getPhotos(
         @Path("rover_name") roverName: String,
         @Query("sol") sol: Int,
+        @Query("camera") camera: String?,
         @Query("page") page: Int
     ): Response<PhotoListResponse>
 }

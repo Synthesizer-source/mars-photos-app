@@ -2,6 +2,7 @@ package com.synthesizer.source.mars.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -29,18 +30,18 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.photoList.apply {
-            adapter = photoListAdapter
-            if (itemDecorationCount == 0) addItemDecoration(PhotoDecoration())
-        }
         binding.apply {
+            photoList.adapter = photoListAdapter
+            if (photoList.itemDecorationCount == 0) photoList.addItemDecoration(PhotoDecoration())
+
+            toolbar.setOnMenuItemClickListener {
+                selectFilter(it)
+                true
+            }
+
             rovers.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
-                    photoListAdapter = PhotoListAdapter()
-                    photoList.adapter = photoListAdapter
-                    viewModel.getRoverName(tab!!.position)?.also { roverName ->
-                        viewModel.fetchPhotoList(roverName)
-                    }
+                    tab?.let { selectRover(it.position) }
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -60,5 +61,38 @@ class HomeFragment : Fragment() {
         viewModel.photoList.observe(viewLifecycleOwner, {
             photoListAdapter.submitData(lifecycle, it)
         })
+    }
+
+    private fun updateFilterMenu(roverName: String) {
+        binding.apply {
+            toolbar.menu.clear()
+            toolbar.inflateMenu(viewModel.getRoverCameraTypes(roverName)!!)
+        }
+    }
+
+    private fun createNewPhotoListAdapter() {
+        photoListAdapter = PhotoListAdapter()
+        binding.photoList.adapter = photoListAdapter
+    }
+
+    private fun selectFilter(menuItem: MenuItem) {
+        if (menuItem.isChecked) return
+        menuItem.isChecked = true
+        createNewPhotoListAdapter()
+        val roverName = viewModel.getRoverName(binding.rovers.selectedTabPosition)!!
+        val camera =
+            if (binding.toolbar.menu.getItem(0) == menuItem) null else menuItem.title.toString()
+        viewModel.fetchPhotoList(
+            roverName = roverName,
+            camera = camera
+        )
+    }
+
+    private fun selectRover(tabPosition: Int) {
+        createNewPhotoListAdapter()
+        viewModel.getRoverName(tabPosition)?.also { roverName ->
+            viewModel.fetchPhotoList(roverName)
+            updateFilterMenu(roverName)
+        }
     }
 }

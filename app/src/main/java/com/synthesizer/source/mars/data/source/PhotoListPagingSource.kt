@@ -10,23 +10,28 @@ import okio.IOException
 import retrofit2.HttpException
 
 class PhotoListPagingSource @AssistedInject constructor(
-    @Assisted private val roverName: String,
+    @Assisted("roverName") private val roverName: String,
+    @Assisted("camera") private val camera: String?,
     private val service: ApiService
-) :
-    PagingSource<Int, PhotoResponse>() {
+) : PagingSource<Int, PhotoResponse>() {
 
     private var sol = 1
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PhotoResponse> {
         val pageIndex = params.key ?: 1
         return try {
-            val response = service.getPhotos(roverName, sol, pageIndex).body()!!
+            val response = service.getPhotos(
+                roverName = roverName,
+                sol = sol,
+                camera = camera,
+                page = pageIndex
+            ).body()!!
             if (response.photos.isNullOrEmpty()) {
                 sol++
                 return LoadResult.Page(data = emptyList(), prevKey = 0, nextKey = 1)
             }
 
-            val prevKey = if (pageIndex == 1) null else pageIndex - 1
+            val prevKey = if (pageIndex <= 1) null else pageIndex - 1
             LoadResult.Page(data = response.photos, prevKey = prevKey, nextKey = pageIndex + 1)
 
         } catch (exception: IOException) {
@@ -37,6 +42,9 @@ class PhotoListPagingSource @AssistedInject constructor(
             LoadResult.Error(exception)
         }
     }
+
+    override val keyReuseSupported: Boolean
+        get() = true
 
     override fun getRefreshKey(state: PagingState<Int, PhotoResponse>): Int? {
         return state.anchorPosition?.let { anchorPosition ->

@@ -8,7 +8,11 @@ import javax.inject.Inject
 
 class RoverRepository @Inject constructor(private val service: ApiService) {
 
-    fun fetchPhotoList(roverName: String) = Pager(PagingConfig(pageSize = 25)) {
-        PhotoListPagingSource(roverName, service)
+    fun fetchPhotoList(roverName: String, camera: String?) = Pager(PagingConfig(pageSize = 25)) {
+        PhotoListPagingSource(
+            roverName = roverName,
+            service = service,
+            camera = camera
+        )
     }.flow
 }

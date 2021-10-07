@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.synthesizer.source.mars.R
 import com.synthesizer.source.mars.data.remote.PhotoResponse
 import com.synthesizer.source.mars.data.repository.RoverRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,19 +21,27 @@ class HomeViewModel @Inject constructor(private val repository: RoverRepository)
     val photoList: LiveData<PagingData<PhotoResponse>> = _photoList
 
     init {
-        fetchPhotoList("curiosity")
+        fetchPhotoList(getRoverName(0)!!)
     }
 
-    fun fetchPhotoList(roverName: String) = viewModelScope.launch {
-        repository.fetchPhotoList(roverName).cachedIn(viewModelScope).collect {
-            _photoList.value = it
-        }
+    fun fetchPhotoList(roverName: String, camera: String? = null) = viewModelScope.launch {
+        repository.fetchPhotoList(roverName = roverName, camera = camera).cachedIn(viewModelScope)
+            .collect {
+                _photoList.value = it
+            }
     }
 
     fun getRoverName(tabPosition: Int) = when (tabPosition) {
         0 -> "curiosity"
         1 -> "opportunity"
         2 -> "spirit"
+        else -> null
+    }
+
+    fun getRoverCameraTypes(roverName: String) = when (roverName) {
+        "curiosity" -> R.menu.menu_curiosity
+        "opportunity" -> R.menu.menu_opportunity
+        "spirit" -> R.menu.menu_spirit
         else -> null
     }
 }
