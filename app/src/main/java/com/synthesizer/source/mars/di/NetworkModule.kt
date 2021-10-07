@@ -1,6 +1,7 @@
 package com.synthesizer.source.mars.di
 
 import com.google.gson.GsonBuilder
+import com.synthesizer.source.mars.data.api.ApiInterceptor
 import com.synthesizer.source.mars.data.api.ApiService
 import dagger.Module
 import dagger.Provides
@@ -22,10 +23,14 @@ object NetworkModule {
     private val gson = GsonBuilder().create()
 
     @Singleton
+    private val interceptor = ApiInterceptor()
+
+    @Singleton
     private val client = OkHttpClient().newBuilder()
         .connectTimeout(10, TimeUnit.SECONDS)
         .writeTimeout(10, TimeUnit.SECONDS)
-        .readTimeout(10, TimeUnit.SECONDS).build()
+        .readTimeout(10, TimeUnit.SECONDS)
+        .addInterceptor(interceptor).build()
 
     @Singleton
     private val retrofit =

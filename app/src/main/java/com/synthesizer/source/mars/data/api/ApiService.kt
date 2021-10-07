@@ -7,7 +7,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
-    @GET("rovers/{rover_name}/photos?sol=1000&api_key=9BM6KOiKEPz5M9FcUXVC6sl2FWG0yD3uZNyTGkHw")
+    @GET("rovers/{rover_name}/photos")
     suspend fun getPhotos(
         @Path("rover_name") roverName: String,
         @Query("sol") sol: Int,
