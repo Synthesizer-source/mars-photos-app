@@ -3,12 +3,11 @@ package com.synthesizer.source.mars.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.synthesizer.source.mars.data.api.ApiService
 import com.synthesizer.source.mars.data.remote.PhotoListResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,22 +17,14 @@ class HomeViewModel @Inject constructor(private val service: ApiService) : ViewM
     val photoList: LiveData<PhotoListResponse> = _photoList
 
     init {
-        loadData()
+        fetchPhotos()
     }
 
-    private fun loadData() {
-        service.getPhotos("curiosity", 1).enqueue(object : Callback<PhotoListResponse> {
-            override fun onResponse(
-                call: Call<PhotoListResponse>,
-                response: Response<PhotoListResponse>
-            ) {
-                if (response.isSuccessful) {
-                    _photoList.value = response.body()
-                }
-            }
-
-            override fun onFailure(call: Call<PhotoListResponse>, t: Throwable) {
-            }
-        })
+    private fun fetchPhotos() = viewModelScope.launch {
+        try {
+            val data = service.getPhotos("curiosity", 1).body()!!
+            _photoList.value = data
+        } catch (exception: Exception) {
+        }
     }
 }
