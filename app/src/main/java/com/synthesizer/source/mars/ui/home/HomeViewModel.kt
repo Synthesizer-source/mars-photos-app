@@ -20,12 +20,19 @@ class HomeViewModel @Inject constructor(private val repository: RoverRepository)
     val photoList: LiveData<PagingData<PhotoResponse>> = _photoList
 
     init {
-        fetchPhotoList()
+        fetchPhotoList("curiosity")
     }
 
-    private fun fetchPhotoList() = viewModelScope.launch {
-        repository.fetchPhotoList("curiosity", 1).cachedIn(viewModelScope).collect {
+    fun fetchPhotoList(roverName: String) = viewModelScope.launch {
+        repository.fetchPhotoList(roverName).cachedIn(viewModelScope).collect {
             _photoList.value = it
         }
+    }
+
+    fun getRoverName(tabPosition: Int) = when (tabPosition) {
+        0 -> "curiosity"
+        1 -> "opportunity"
+        2 -> "spirit"
+        else -> null
     }
 }
