@@ -1,6 +1,7 @@
 package com.synthesizer.source.mars.ui.photodetail
 
 import androidx.lifecycle.*
+import com.synthesizer.source.mars.data.Resource
 import com.synthesizer.source.mars.data.repository.RoverRepository
 import com.synthesizer.source.mars.domain.model.PhotoDetail
 import dagger.assisted.Assisted
@@ -16,6 +17,9 @@ class PhotoDetailViewModel @AssistedInject constructor(
 
     private val _photoDetail = MutableLiveData<PhotoDetail>()
     val photoDetail: LiveData<PhotoDetail> = _photoDetail
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
 
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
@@ -40,7 +44,22 @@ class PhotoDetailViewModel @AssistedInject constructor(
 
     private fun fetchPhotoDetail() = viewModelScope.launch {
         repository.fetchPhotoDetail(id).collect {
-            _photoDetail.value = it
+            when (it) {
+                is Resource.Failure -> onFailure()
+                is Resource.Loading -> onLoading()
+                is Resource.Success -> onSuccess(it.data)
+            }
         }
     }
+
+    private fun onSuccess(data: PhotoDetail) {
+        _photoDetail.value = data
+        _isLoading.value = false
+    }
+
+    private fun onLoading() {
+        _isLoading.value = true
+    }
+
+    private fun onFailure() {}
 }

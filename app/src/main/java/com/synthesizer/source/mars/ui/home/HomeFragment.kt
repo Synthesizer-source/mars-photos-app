@@ -102,7 +102,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToPhotoDetail(id: Int) {
-        val action = HomeFragmentDirections.goToPhotoDetail(id)
-        findNavController().navigate(action)
+        try {
+            val action = HomeFragmentDirections.goToPhotoDetail(id)
+            findNavController().navigate(action)
+        } catch (exception: Exception) {
+        }
     }
 }

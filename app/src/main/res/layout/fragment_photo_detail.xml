@@ -28,8 +28,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
+                android:maxHeight="360dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:load="@{viewModel.photoDetail.imgSrc}"
+                app:visible="@{!viewModel.isLoading()}"
                 tools:ignore="ContentDescription"
                 tools:src="@tools:sample/avatars" />
 
@@ -58,22 +60,24 @@
                 android:id="@+id/labelDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/date"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
-                app:layout_constraintTop_toBottomOf="@id/photo" />
+                app:layout_constraintTop_toBottomOf="@id/photo"
+                app:visible="@{!viewModel.isLoading()}" />
 
             <TextView
                 android:id="@+id/earthDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:text="@{viewModel.photoDetail.date}"
-                android:textSize="16sp"
+                android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintTop_toBottomOf="@id/labelDate"
+                app:visible="@{!viewModel.isLoading()}"
                 tools:text="01.01.1999" />
 
             <TextView
@@ -82,20 +86,22 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/rover_name"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
-                app:layout_constraintTop_toBottomOf="@id/earthDate" />
+                app:layout_constraintTop_toBottomOf="@id/earthDate"
+                app:visible="@{!viewModel.isLoading()}" />
 
             <TextView
                 android:id="@+id/roverName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:text="@{viewModel.photoDetail.roverName}"
-                android:textSize="16sp"
+                android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintTop_toBottomOf="@id/labelRoverName"
+                app:visible="@{!viewModel.isLoading()}"
                 tools:text="Curiosity" />
 
             <TextView
@@ -104,23 +110,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/camera"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
-                app:layout_constraintTop_toBottomOf="@id/roverName" />
+                app:layout_constraintTop_toBottomOf="@id/roverName"
+                app:visible="@{!viewModel.isLoading()}" />
 
             <TextView
                 android:id="@+id/camera"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginEnd="16dp"
-                android:paddingBottom="24dp"
+                android:paddingBottom="16dp"
                 android:text="@{viewModel.photoDetail.cameraName}"
-                android:textSize="16sp"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="@id/guidelineCenter"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintTop_toBottomOf="@id/labelCamera"
+                app:visible="@{!viewModel.isLoading()}"
                 tools:text="Front Hazard Avoidance Camera" />
 
             <TextView
@@ -128,21 +136,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/status"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/guidelineCenter"
-                app:layout_constraintTop_toTopOf="@id/labelDate" />
+                app:layout_constraintTop_toTopOf="@id/labelDate"
+                app:visible="@{!viewModel.isLoading()}" />
 
             <TextView
                 android:id="@+id/status"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:text="@{viewModel.photoDetail.status}"
-                android:textSize="16sp"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintStart_toStartOf="@id/guidelineCenter"
                 app:layout_constraintTop_toBottomOf="@id/labelStatus"
+                app:visible="@{!viewModel.isLoading()}"
                 tools:text="Complete" />
 
             <TextView
@@ -151,21 +161,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/launch_date"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/guidelineCenter"
-                app:layout_constraintTop_toBottomOf="@id/status" />
+                app:layout_constraintTop_toBottomOf="@id/status"
+                app:visible="@{!viewModel.isLoading()}" />
 
             <TextView
                 android:id="@+id/launchDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:text="@{viewModel.photoDetail.launchDate}"
-                android:textSize="16sp"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintStart_toStartOf="@id/guidelineCenter"
                 app:layout_constraintTop_toBottomOf="@id/labelLaunchDate"
+                app:visible="@{!viewModel.isLoading()}"
                 tools:text="01.01.1999" />
 
             <TextView
@@ -174,22 +186,35 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/landing_date"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/guidelineCenter"
-                app:layout_constraintTop_toBottomOf="@id/launchDate" />
+                app:layout_constraintTop_toBottomOf="@id/launchDate"
+                app:visible="@{!viewModel.isLoading()}" />
 
             <TextView
                 android:id="@+id/landingDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:text="@{viewModel.photoDetail.landingDate}"
-                android:textSize="16sp"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintStart_toStartOf="@id/guidelineCenter"
                 app:layout_constraintTop_toBottomOf="@id/labelLandingDate"
+                app:visible="@{!viewModel.isLoading()}"
                 tools:text="01.01.1999" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                app:indicatorColor="@color/dark_blue"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:visible="@{viewModel.isLoading()}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>
