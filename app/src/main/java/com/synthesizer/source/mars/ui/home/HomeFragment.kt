@@ -7,11 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingData
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.synthesizer.source.mars.databinding.FragmentHomeBinding
+import com.synthesizer.source.mars.util.setVisibility
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -67,6 +72,23 @@ class HomeFragment : Fragment() {
         viewModel.photoList.observe(viewLifecycleOwner, {
             photoListAdapter.submitData(lifecycle, it)
         })
+
+        viewModel.loading.observe(viewLifecycleOwner, {
+            binding.apply {
+                photoList.setVisibility(!it)
+                progressBar.setVisibility(it)
+            }
+        })
+
+        viewModel.errorMessage.observe(viewLifecycleOwner, {
+            showError(it)
+        })
+
+        lifecycleScope.launch {
+            photoListAdapter.loadStateFlow.collectLatest { loadStates ->
+                viewModel.handleLoadStatesError(loadStates)
+            }
+        }
     }
 
     private fun updateFilterMenu(roverName: String) {
@@ -107,5 +129,11 @@ class HomeFragment : Fragment() {
             findNavController().navigate(action)
         } catch (exception: Exception) {
         }
+    }
+
+    private fun showError(message: String) {
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_INDEFINITE).setAction("refresh") {
+            photoListAdapter.refresh()
+        }.show()
     }
 }
