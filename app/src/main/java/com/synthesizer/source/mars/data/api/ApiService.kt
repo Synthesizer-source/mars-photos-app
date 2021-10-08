@@ -1,5 +1,6 @@
 package com.synthesizer.source.mars.data.api
 
+import com.synthesizer.source.mars.data.remote.PhotoDetailResponse
 import com.synthesizer.source.mars.data.remote.PhotoListResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -14,4 +15,9 @@ interface ApiService {
         @Query("camera") camera: String?,
         @Query("page") page: Int
     ): Response<PhotoListResponse>
+
+    @GET("photos/{id}")
+    suspend fun getPhotoDetail(
+        @Path("id") id: Int
+    ): Response<PhotoDetailResponse>
 }

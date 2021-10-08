@@ -12,6 +12,8 @@ import com.synthesizer.source.mars.util.load
 class PhotoListAdapter :
     PagingDataAdapter<PhotoResponse, PhotoListAdapter.ViewHolder>(DIFF) {
 
+    var itemClickListener: (id: Int) -> Unit = {}
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemPhotoListBinding.inflate(inflater)
@@ -22,10 +24,13 @@ class PhotoListAdapter :
         getItem(position)?.let { holder.bind(it) }
     }
 
-    class ViewHolder(private val binding: ItemPhotoListBinding) :
+    inner class ViewHolder(private val binding: ItemPhotoListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PhotoResponse) {
             binding.photo.load(item.imgSrc)
+            binding.root.setOnClickListener {
+                itemClickListener(item.id)
+            }
         }
     }
 

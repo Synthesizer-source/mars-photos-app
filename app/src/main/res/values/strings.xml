@@ -14,4 +14,10 @@
     <string name="pancam">PANCAM</string>
     <string name="minites">MINITES</string>
     <string name="none">None</string>
+    <string name="date">Date</string>
+    <string name="rover_name">Rover Name</string>
+    <string name="camera">Camera</string>
+    <string name="status">Status</string>
+    <string name="launch_date">Launch Date</string>
+    <string name="landing_date">Landing Date</string>
 </resources>

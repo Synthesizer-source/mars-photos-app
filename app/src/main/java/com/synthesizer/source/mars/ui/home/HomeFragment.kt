@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayout
 import com.synthesizer.source.mars.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +33,9 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             photoList.adapter = photoListAdapter
+            photoListAdapter.itemClickListener = {
+                navigateToPhotoDetail(it)
+            }
             if (photoList.itemDecorationCount == 0) photoList.addItemDecoration(PhotoDecoration())
 
             toolbar.setOnMenuItemClickListener {
@@ -72,6 +76,9 @@ class HomeFragment : Fragment() {
 
     private fun createNewPhotoListAdapter() {
         photoListAdapter = PhotoListAdapter()
+        photoListAdapter.itemClickListener = {
+            navigateToPhotoDetail(it)
+        }
         binding.photoList.adapter = photoListAdapter
     }
 
@@ -94,5 +101,10 @@ class HomeFragment : Fragment() {
             viewModel.fetchPhotoList(roverName)
             updateFilterMenu(roverName)
         }
+    }
+
+    private fun navigateToPhotoDetail(id: Int) {
+        val action = HomeFragmentDirections.goToPhotoDetail(id)
+        findNavController().navigate(action)
     }
 }
