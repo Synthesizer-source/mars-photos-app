@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.paging.PagingData
 import com.google.android.material.tabs.TabLayout
 import com.synthesizer.source.mars.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +33,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
+            photoList.itemAnimator = null
             photoList.adapter = photoListAdapter
             photoListAdapter.itemClickListener = {
                 navigateToPhotoDetail(it)
@@ -74,18 +76,14 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun createNewPhotoListAdapter() {
-        photoListAdapter = PhotoListAdapter()
-        photoListAdapter.itemClickListener = {
-            navigateToPhotoDetail(it)
-        }
-        binding.photoList.adapter = photoListAdapter
+    private fun clearRecyclerView() {
+        photoListAdapter.submitData(lifecycle, PagingData.empty())
     }
 
     private fun selectFilter(menuItem: MenuItem) {
         if (menuItem.isChecked) return
         menuItem.isChecked = true
-        createNewPhotoListAdapter()
+        clearRecyclerView()
         val roverName = viewModel.getRoverName(binding.rovers.selectedTabPosition)!!
         val camera =
             if (binding.toolbar.menu.getItem(0) == menuItem) null else menuItem.title.toString()
@@ -96,7 +94,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun selectRover(tabPosition: Int) {
-        createNewPhotoListAdapter()
+        clearRecyclerView()
         viewModel.getRoverName(tabPosition)?.also { roverName ->
             viewModel.fetchPhotoList(roverName)
             updateFilterMenu(roverName)
