@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.synthesizer.source.mars.data.remote.PhotoResponse
 import com.synthesizer.source.mars.databinding.ItemPhotoListBinding
+import com.synthesizer.source.mars.domain.model.PhotoListItem
 import com.synthesizer.source.mars.util.load
 
 class PhotoListAdapter :
-    PagingDataAdapter<PhotoResponse, PhotoListAdapter.ViewHolder>(DIFF) {
+    PagingDataAdapter<PhotoListItem, PhotoListAdapter.ViewHolder>(DIFF) {
 
     var itemClickListener: (id: Int) -> Unit = {}
 
@@ -26,7 +26,7 @@ class PhotoListAdapter :
 
     inner class ViewHolder(private val binding: ItemPhotoListBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: PhotoResponse) {
+        fun bind(item: PhotoListItem) {
             binding.photo.load(item.imgSrc)
             binding.root.setOnClickListener {
                 itemClickListener(item.id)
@@ -34,12 +34,18 @@ class PhotoListAdapter :
         }
     }
 
-    object DIFF : DiffUtil.ItemCallback<PhotoResponse>() {
-        override fun areItemsTheSame(oldItem: PhotoResponse, newItem: PhotoResponse): Boolean {
+    object DIFF : DiffUtil.ItemCallback<PhotoListItem>() {
+        override fun areItemsTheSame(
+            oldItem: PhotoListItem,
+            newItem: PhotoListItem
+        ): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: PhotoResponse, newItem: PhotoResponse): Boolean {
+        override fun areContentsTheSame(
+            oldItem: PhotoListItem,
+            newItem: PhotoListItem
+        ): Boolean {
             return oldItem.toString() == newItem.toString()
         }
     }

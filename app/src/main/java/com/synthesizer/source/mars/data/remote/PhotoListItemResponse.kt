@@ -3,7 +3,7 @@ package com.synthesizer.source.mars.data.remote
 
 import com.google.gson.annotations.SerializedName
 
-data class PhotoResponse(
+data class PhotoListItemResponse(
     @SerializedName("camera")
     val camera: CameraResponse,
     @SerializedName("earth_date")

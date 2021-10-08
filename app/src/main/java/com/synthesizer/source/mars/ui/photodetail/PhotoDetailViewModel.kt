@@ -1,8 +1,8 @@
 package com.synthesizer.source.mars.ui.photodetail
 
 import androidx.lifecycle.*
-import com.synthesizer.source.mars.data.remote.PhotoDetailInfoResponse
 import com.synthesizer.source.mars.data.repository.RoverRepository
+import com.synthesizer.source.mars.domain.model.PhotoDetail
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.collect
@@ -14,8 +14,8 @@ class PhotoDetailViewModel @AssistedInject constructor(
     private val repository: RoverRepository
 ) : ViewModel() {
 
-    private val _photoDetail = MutableLiveData<PhotoDetailInfoResponse>()
-    val photoDetail: LiveData<PhotoDetailInfoResponse> = _photoDetail
+    private val _photoDetail = MutableLiveData<PhotoDetail>()
+    val photoDetail: LiveData<PhotoDetail> = _photoDetail
 
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
@@ -40,7 +40,7 @@ class PhotoDetailViewModel @AssistedInject constructor(
 
     private fun fetchPhotoDetail() = viewModelScope.launch {
         repository.fetchPhotoDetail(id).collect {
-            _photoDetail.value = it.photo
+            _photoDetail.value = it
         }
     }
 }

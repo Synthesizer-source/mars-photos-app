@@ -3,7 +3,7 @@ package com.synthesizer.source.mars.data.source
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.synthesizer.source.mars.data.api.ApiService
-import com.synthesizer.source.mars.data.remote.PhotoResponse
+import com.synthesizer.source.mars.data.remote.PhotoListItemResponse
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import okio.IOException
@@ -13,11 +13,11 @@ class PhotoListPagingSource @AssistedInject constructor(
     @Assisted("roverName") private val roverName: String,
     @Assisted("camera") private val camera: String?,
     private val service: ApiService
-) : PagingSource<Int, PhotoResponse>() {
+) : PagingSource<Int, PhotoListItemResponse>() {
 
     private var sol = 1
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PhotoResponse> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PhotoListItemResponse> {
         val pageIndex = params.key ?: 1
         return try {
             val response = service.getPhotos(
@@ -46,7 +46,7 @@ class PhotoListPagingSource @AssistedInject constructor(
     override val keyReuseSupported: Boolean
         get() = true
 
-    override fun getRefreshKey(state: PagingState<Int, PhotoResponse>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, PhotoListItemResponse>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)

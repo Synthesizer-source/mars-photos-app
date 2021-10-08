@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.synthesizer.source.mars.R
-import com.synthesizer.source.mars.data.remote.PhotoResponse
 import com.synthesizer.source.mars.data.repository.RoverRepository
+import com.synthesizer.source.mars.domain.model.PhotoListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -17,8 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val repository: RoverRepository) : ViewModel() {
 
-    private var _photoList = MutableLiveData<PagingData<PhotoResponse>>()
-    val photoList: LiveData<PagingData<PhotoResponse>> = _photoList
+    private var _photoList = MutableLiveData<PagingData<PhotoListItem>>()
+    val photoList: LiveData<PagingData<PhotoListItem>> = _photoList
 
     init {
         fetchPhotoList(getRoverName(0)!!)

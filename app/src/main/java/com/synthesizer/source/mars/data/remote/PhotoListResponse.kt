@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 
 data class PhotoListResponse(
     @SerializedName("photos")
-    val photos: List<PhotoResponse>
+    val photos: List<PhotoListItemResponse>
 )
