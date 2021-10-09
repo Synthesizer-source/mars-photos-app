@@ -23,11 +23,14 @@ class HomeViewModel @Inject constructor(private val repository: RoverRepository)
     private var _photoList = MutableLiveData<PagingData<PhotoListItem>>()
     val photoList: LiveData<PagingData<PhotoListItem>> = _photoList
 
+    private var _selectedRover: String = ""
+    private var _selectedCamera: String? = null
+
     init {
-        fetchPhotoList(getRoverName(0)!!)
+        setCurrentRoverName(0)
     }
 
-    fun fetchPhotoList(roverName: String, camera: String? = null) = viewModelScope.launch {
+    private fun fetchPhotoList(roverName: String, camera: String? = null) = viewModelScope.launch {
         Pager(PagingConfig(pageSize = 25)) {
             PhotoListPagingSource(
                 roverName = roverName,
@@ -74,17 +77,31 @@ class HomeViewModel @Inject constructor(private val repository: RoverRepository)
         }
     }
 
-    fun getRoverName(tabPosition: Int) = when (tabPosition) {
-        0 -> "curiosity"
-        1 -> "opportunity"
-        2 -> "spirit"
-        else -> null
+    fun setCurrentRoverName(tabPosition: Int?) {
+        clearData()
+        _selectedRover = getRoverName(tabPosition)
+        fetchPhotoList(roverName = _selectedRover, _selectedCamera)
     }
 
-    fun getRoverCameraTypes(roverName: String) = when (roverName) {
-        "curiosity" -> R.menu.menu_curiosity
-        "opportunity" -> R.menu.menu_opportunity
-        "spirit" -> R.menu.menu_spirit
-        else -> null
+    fun setCurrentCameraType(camera: String?) {
+        clearData()
+        _selectedCamera = camera
+        fetchPhotoList(roverName = _selectedRover, camera = _selectedCamera)
+    }
+
+    private fun clearData() {
+        _photoList.value = PagingData.empty()
+    }
+
+    private fun getRoverName(tabPosition: Int?) = when (tabPosition) {
+        1 -> "opportunity"
+        2 -> "spirit"
+        else -> "curiosity"
+    }
+
+    fun getRoverCameraTypes(tabPosition: Int?) = when (tabPosition) {
+        1 -> R.menu.menu_opportunity
+        2 -> R.menu.menu_spirit
+        else -> R.menu.menu_curiosity
     }
 }

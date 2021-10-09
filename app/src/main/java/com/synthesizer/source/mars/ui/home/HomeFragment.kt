@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.PagingData
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.synthesizer.source.mars.R
@@ -54,7 +53,7 @@ class HomeFragment : Fragment() {
 
             rovers.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
-                    tab?.let { selectRover(it.position) }
+                    selectRover(tab?.position)
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -87,43 +86,30 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun updateFilterMenu(roverName: String) {
+    private fun updateFilterMenu(tabPosition: Int?) {
         binding.apply {
             toolbar.menu.clear()
-            toolbar.inflateMenu(viewModel.getRoverCameraTypes(roverName)!!)
+            toolbar.inflateMenu(viewModel.getRoverCameraTypes(tabPosition))
         }
-    }
-
-    private fun clearRecyclerView() {
-        photoListAdapter.submitData(lifecycle, PagingData.empty())
     }
 
     private fun selectFilter(menuItem: MenuItem) {
         if (menuItem.isChecked) return
         menuItem.isChecked = true
-        clearRecyclerView()
-        val roverName = viewModel.getRoverName(binding.rovers.selectedTabPosition)!!
         val camera =
             if (binding.toolbar.menu.getItem(0) == menuItem) null else menuItem.title.toString()
-        viewModel.fetchPhotoList(
-            roverName = roverName,
-            camera = camera
-        )
+        viewModel.setCurrentCameraType(camera)
     }
 
-    private fun selectRover(tabPosition: Int) {
-        clearRecyclerView()
-        viewModel.getRoverName(tabPosition)?.also { roverName ->
-            viewModel.fetchPhotoList(roverName)
-            updateFilterMenu(roverName)
-        }
+    private fun selectRover(tabPosition: Int?) {
+        updateFilterMenu(tabPosition)
+        viewModel.setCurrentRoverName(tabPosition)
     }
 
     private fun navigateToPhotoDetail(id: Int) {
-        try {
+        if (findNavController().currentDestination?.id == R.id.homeFragment) {
             val action = HomeFragmentDirections.goToPhotoDetail(id)
             findNavController().navigate(action)
-        } catch (exception: Exception) {
         }
     }
 
