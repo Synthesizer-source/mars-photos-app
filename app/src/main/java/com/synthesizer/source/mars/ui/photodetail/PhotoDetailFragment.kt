@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import com.synthesizer.source.mars.databinding.FragmentPhotoDetailBinding
+import com.synthesizer.source.mars.util.EventObserver
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -38,7 +39,7 @@ class PhotoDetailFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.errorMessage.observe(viewLifecycleOwner, {
+        viewModel.errorMessage.observe(viewLifecycleOwner, EventObserver {
             showError(it)
         })
     }

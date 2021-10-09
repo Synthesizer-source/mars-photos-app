@@ -36,7 +36,7 @@ class HomeViewModel @Inject constructor(private val repository: RoverRepository)
             )
         }.flow.cachedIn(viewModelScope)
             .map {
-                if (loading.value == true) {
+                if (loading.value?.peekContent() == true) {
                     it.map { item ->
                         onFirstItemLoaded()
                         item
@@ -51,7 +51,7 @@ class HomeViewModel @Inject constructor(private val repository: RoverRepository)
     }
 
     private fun onFirstItemLoaded() {
-        if (loading.value == true) {
+        if (loading.value?.peekContent() == true) {
             onDataLoaded()
         }
     }

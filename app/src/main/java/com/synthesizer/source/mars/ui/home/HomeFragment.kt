@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.synthesizer.source.mars.R
 import com.synthesizer.source.mars.databinding.FragmentHomeBinding
+import com.synthesizer.source.mars.util.EventObserver
 import com.synthesizer.source.mars.util.setVisibility
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -74,14 +75,14 @@ class HomeFragment : Fragment() {
             photoListAdapter.submitData(lifecycle, it)
         })
 
-        viewModel.loading.observe(viewLifecycleOwner, {
+        viewModel.loading.observe(viewLifecycleOwner, EventObserver {
             binding.apply {
                 photoList.setVisibility(!it)
                 progressBar.setVisibility(it)
             }
         })
 
-        viewModel.errorMessage.observe(viewLifecycleOwner, {
+        viewModel.errorMessage.observe(viewLifecycleOwner, EventObserver {
             showError(it)
         })
 
