@@ -2,13 +2,13 @@ package com.synthesizer.source.mars.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.synthesizer.source.mars.R
 import com.synthesizer.source.mars.data.repository.RoverRepository
 import com.synthesizer.source.mars.data.source.PhotoListPagingSource
 import com.synthesizer.source.mars.domain.model.PhotoListItem
+import com.synthesizer.source.mars.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -18,16 +18,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val repository: RoverRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(private val repository: RoverRepository) : BaseViewModel() {
 
     private var _photoList = MutableLiveData<PagingData<PhotoListItem>>()
     val photoList: LiveData<PagingData<PhotoListItem>> = _photoList
-
-    private val _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean> = _loading
-
-    private var _errorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String> = _errorMessage
 
     init {
         fetchPhotoList(getRoverName(0)!!)
@@ -44,7 +38,7 @@ class HomeViewModel @Inject constructor(private val repository: RoverRepository)
             .map {
                 if (loading.value == true) {
                     it.map { item ->
-                        onFirstDataIsLoaded()
+                        onFirstItemLoaded()
                         item
                     }
                 } else it
@@ -56,17 +50,9 @@ class HomeViewModel @Inject constructor(private val repository: RoverRepository)
             }
     }
 
-    private fun onFailure(message: String?) {
-        message?.let { _errorMessage.value = it }
-    }
-
-    private fun onLoading() {
-        _loading.value = true
-    }
-
-    private fun onFirstDataIsLoaded() {
+    private fun onFirstItemLoaded() {
         if (loading.value == true) {
-            _loading.value = false
+            onDataLoaded()
         }
     }
 

@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingData
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
+import com.synthesizer.source.mars.R
 import com.synthesizer.source.mars.databinding.FragmentHomeBinding
 import com.synthesizer.source.mars.util.setVisibility
 import dagger.hilt.android.AndroidEntryPoint
@@ -132,8 +133,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun showError(message: String) {
-        Snackbar.make(requireView(), message, Snackbar.LENGTH_INDEFINITE).setAction("refresh") {
-            photoListAdapter.refresh()
-        }.show()
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_INDEFINITE)
+            .setAction(R.string.retry) {
+                photoListAdapter.retry()
+            }.show()
     }
 }

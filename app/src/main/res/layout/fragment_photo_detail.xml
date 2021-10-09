@@ -31,7 +31,7 @@
                 android:maxHeight="360dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:load="@{viewModel.photoDetail.imgSrc}"
-                app:visible="@{!viewModel.isLoading()}"
+                app:visible="@{!viewModel.loading}"
                 tools:ignore="ContentDescription"
                 tools:src="@tools:sample/avatars" />
 
@@ -66,7 +66,7 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintTop_toBottomOf="@id/photo"
-                app:visible="@{!viewModel.isLoading()}" />
+                app:visible="@{!viewModel.loading}" />
 
             <TextView
                 android:id="@+id/earthDate"
@@ -77,7 +77,7 @@
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintTop_toBottomOf="@id/labelDate"
-                app:visible="@{!viewModel.isLoading()}"
+                app:visible="@{!viewModel.loading}"
                 tools:text="01.01.1999" />
 
             <TextView
@@ -90,7 +90,7 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintTop_toBottomOf="@id/earthDate"
-                app:visible="@{!viewModel.isLoading()}" />
+                app:visible="@{!viewModel.loading}" />
 
             <TextView
                 android:id="@+id/roverName"
@@ -101,7 +101,7 @@
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintTop_toBottomOf="@id/labelRoverName"
-                app:visible="@{!viewModel.isLoading()}"
+                app:visible="@{!viewModel.loading}"
                 tools:text="Curiosity" />
 
             <TextView
@@ -114,7 +114,7 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintTop_toBottomOf="@id/roverName"
-                app:visible="@{!viewModel.isLoading()}" />
+                app:visible="@{!viewModel.loading}" />
 
             <TextView
                 android:id="@+id/camera"
@@ -128,7 +128,7 @@
                 app:layout_constraintEnd_toEndOf="@id/guidelineCenter"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintTop_toBottomOf="@id/labelCamera"
-                app:visible="@{!viewModel.isLoading()}"
+                app:visible="@{!viewModel.loading}"
                 tools:text="Front Hazard Avoidance Camera" />
 
             <TextView
@@ -140,7 +140,7 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/guidelineCenter"
                 app:layout_constraintTop_toTopOf="@id/labelDate"
-                app:visible="@{!viewModel.isLoading()}" />
+                app:visible="@{!viewModel.loading}" />
 
             <TextView
                 android:id="@+id/status"
@@ -152,7 +152,7 @@
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintStart_toStartOf="@id/guidelineCenter"
                 app:layout_constraintTop_toBottomOf="@id/labelStatus"
-                app:visible="@{!viewModel.isLoading()}"
+                app:visible="@{!viewModel.loading}"
                 tools:text="Complete" />
 
             <TextView
@@ -165,7 +165,7 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/guidelineCenter"
                 app:layout_constraintTop_toBottomOf="@id/status"
-                app:visible="@{!viewModel.isLoading()}" />
+                app:visible="@{!viewModel.loading}" />
 
             <TextView
                 android:id="@+id/launchDate"
@@ -177,7 +177,7 @@
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintStart_toStartOf="@id/guidelineCenter"
                 app:layout_constraintTop_toBottomOf="@id/labelLaunchDate"
-                app:visible="@{!viewModel.isLoading()}"
+                app:visible="@{!viewModel.loading}"
                 tools:text="01.01.1999" />
 
             <TextView
@@ -190,7 +190,7 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/guidelineCenter"
                 app:layout_constraintTop_toBottomOf="@id/launchDate"
-                app:visible="@{!viewModel.isLoading()}" />
+                app:visible="@{!viewModel.loading}" />
 
             <TextView
                 android:id="@+id/landingDate"
@@ -202,7 +202,7 @@
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintStart_toStartOf="@id/guidelineCenter"
                 app:layout_constraintTop_toBottomOf="@id/labelLandingDate"
-                app:visible="@{!viewModel.isLoading()}"
+                app:visible="@{!viewModel.loading}"
                 tools:text="01.01.1999" />
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
@@ -214,7 +214,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:visible="@{viewModel.isLoading()}" />
+                app:visible="@{viewModel.loading}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>
