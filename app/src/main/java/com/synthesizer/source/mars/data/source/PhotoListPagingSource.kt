@@ -2,46 +2,52 @@ package com.synthesizer.source.mars.data.source
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.synthesizer.source.mars.data.Resource
-import com.synthesizer.source.mars.data.repository.RoverRepository
+import com.synthesizer.source.mars.data.api.ApiService
+import com.synthesizer.source.mars.domain.mapper.toDomain
 import com.synthesizer.source.mars.domain.model.PhotoListItem
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import okio.IOException
 import retrofit2.HttpException
+import java.util.concurrent.atomic.AtomicInteger
 
 class PhotoListPagingSource @AssistedInject constructor(
     @Assisted("roverName") private val roverName: String,
     @Assisted("camera") private val camera: String?,
-    private val repository: RoverRepository
+    private val service: ApiService
 ) : PagingSource<Int, PhotoListItem>() {
 
-    private var sol = 1
+    private var sol = AtomicInteger(1)
+    private var pageIndex = AtomicInteger(1)
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PhotoListItem> {
-        val pageIndex = params.key ?: 1
+        if (params.key != null) pageIndex.set(params.key!!)
+        else pageIndex.set(1)
         return try {
-            val resource = repository.fetchPhotoList(
+            val response = service.getPhotos(
                 roverName = roverName,
-                sol = sol,
+                sol = sol.get(),
                 camera = camera,
-                page = pageIndex
+                page = pageIndex.get()
             )
-            if (resource is Resource.Success) {
-                val response = resource.data
-                if (response.isNullOrEmpty()) {
-                    sol++
-                    return LoadResult.Page(data = emptyList(), prevKey = 0, nextKey = 1)
+            if (response.isSuccessful) {
+                val data = response.body()!!.photos.map { it.toDomain() }
+                if (data.isNullOrEmpty()) {
+                    sol.incrementAndGet()
+                    return LoadResult.Page(
+                        data = emptyList(),
+                        prevKey = 0,
+                        nextKey = 1
+                    )
                 }
-
-                val prevKey = if (pageIndex <= 1) null else pageIndex - 1
+                val prevKey = if (pageIndex.get() == 1) null else pageIndex.get() - 1
                 return LoadResult.Page(
-                    data = response,
+                    data = data,
                     prevKey = prevKey,
-                    nextKey = pageIndex + 1
+                    nextKey = pageIndex.get() + 1
                 )
             } else {
-                return LoadResult.Error(Throwable((resource as Resource.Failure).message))
+                return LoadResult.Error(Throwable(response.message()))
             }
         } catch (exception: IOException) {
             LoadResult.Error(exception)

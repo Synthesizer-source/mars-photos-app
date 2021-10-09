@@ -44,6 +44,9 @@ class HomeFragment : Fragment() {
             photoListAdapter.itemClickListener = {
                 navigateToPhotoDetail(it)
             }
+            photoListAdapter.firstItemLoadedListener = {
+                viewModel.onDataLoaded()
+            }
             if (photoList.itemDecorationCount == 0) photoList.addItemDecoration(PhotoDecoration())
 
             toolbar.setOnMenuItemClickListener {
@@ -89,6 +92,7 @@ class HomeFragment : Fragment() {
     private fun updateFilterMenu(tabPosition: Int?) {
         binding.apply {
             toolbar.menu.clear()
+            viewModel.setCurrentCameraType(null)
             toolbar.inflateMenu(viewModel.getRoverCameraTypes(tabPosition))
         }
     }
