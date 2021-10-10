@@ -18,7 +18,7 @@ Android app with [mars-photo-api](https://github.com/chrisccerami/mars-photo-api
 - [Shimmer](https://github.com/facebook/shimmer-android) for image loading animation
 
 ## Architecture
-<p align="center"><img alt="architecture" src="/art/architecture.png" width="35%" /></p>
+<p align="center"><img alt="architecture" src="/art/architecture.png" width="25%" /></p>
 
 ## Screenshots
 <p align="center"><img alt="1" src="/art/image_0.png" width="23%" />&nbsp;&nbsp;&nbsp;<img alt="2" src="/art/image_1.png" width="23%" />&nbsp;&nbsp;&nbsp;<img alt="3" src="/art/image_2.png" width="23%" />&nbsp;&nbsp;&nbsp;<img alt="4" src="/art/image_3.png" width="23%" /></p>
