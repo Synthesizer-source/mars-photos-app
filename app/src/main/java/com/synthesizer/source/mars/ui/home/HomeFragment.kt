@@ -46,6 +46,7 @@ class HomeFragment : Fragment() {
             }
             photoListAdapter.firstItemLoadedListener = {
                 viewModel.onDataLoaded()
+                binding.photoList.layoutManager?.scrollToPosition(0)
             }
             if (photoList.itemDecorationCount == 0) photoList.addItemDecoration(PhotoDecoration())
 

@@ -2,6 +2,7 @@ package com.synthesizer.source.mars.data.source
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.synthesizer.source.mars.data.Resource
 import com.synthesizer.source.mars.data.api.ApiService
 import com.synthesizer.source.mars.domain.mapper.toDomain
 import com.synthesizer.source.mars.domain.model.PhotoListItem
@@ -24,14 +25,16 @@ class PhotoListPagingSource @AssistedInject constructor(
         if (params.key != null) pageIndex.set(params.key!!)
         else pageIndex.set(1)
         return try {
-            val response = service.getPhotos(
-                roverName = roverName,
-                sol = sol.get(),
-                camera = camera,
-                page = pageIndex.get()
-            )
-            if (response.isSuccessful) {
-                val data = response.body()!!.photos.map { it.toDomain() }
+            val resource = Resource.of {
+                service.getPhotos(
+                    roverName = roverName,
+                    sol = sol.get(),
+                    camera = camera,
+                    page = pageIndex.get()
+                )
+            }
+            if (resource is Resource.Success) {
+                val data = resource.data.photos.map { it.toDomain() }
                 if (data.isNullOrEmpty()) {
                     sol.incrementAndGet()
                     return LoadResult.Page(
@@ -47,7 +50,8 @@ class PhotoListPagingSource @AssistedInject constructor(
                     nextKey = pageIndex.get() + 1
                 )
             } else {
-                return LoadResult.Error(Throwable(response.message()))
+                val errorMessage = if (resource is Resource.Failure) resource.message else null
+                return LoadResult.Error(Throwable(errorMessage))
             }
         } catch (exception: IOException) {
             LoadResult.Error(exception)
