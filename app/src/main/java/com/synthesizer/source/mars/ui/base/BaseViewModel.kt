@@ -13,7 +13,7 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
     private val _loading = MutableLiveData<Event<Boolean>>()
     val loading: LiveData<Event<Boolean>> = _loading
 
-    private var _errorMessage = MutableLiveData<Event<String>>()
+    private val _errorMessage = MutableLiveData<Event<String>>()
     val errorMessage: LiveData<Event<String>> = _errorMessage
 
     open fun onFailure(message: String?) {

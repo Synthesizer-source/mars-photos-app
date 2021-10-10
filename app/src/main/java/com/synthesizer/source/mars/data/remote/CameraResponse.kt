@@ -12,4 +12,6 @@ data class CameraResponse(
     val name: String,
     @SerializedName("rover_id")
     val roverId: Int
-)
+) {
+    fun getShortAndFullName() = "($name) $fullName"
+}

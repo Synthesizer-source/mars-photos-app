@@ -4,8 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.synthesizer.source.mars.data.Resource
 import com.synthesizer.source.mars.data.api.ApiService
-import com.synthesizer.source.mars.domain.mapper.toDomain
-import com.synthesizer.source.mars.domain.model.PhotoListItem
+import com.synthesizer.source.mars.data.remote.PhotoListItemResponse
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import okio.IOException
@@ -16,12 +15,12 @@ class PhotoListPagingSource @AssistedInject constructor(
     @Assisted("roverName") private val roverName: String,
     @Assisted("camera") private val camera: String?,
     private val service: ApiService
-) : PagingSource<Int, PhotoListItem>() {
+) : PagingSource<Int, PhotoListItemResponse>() {
 
     private var sol = AtomicInteger(1)
     private var pageIndex = AtomicInteger(1)
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PhotoListItem> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PhotoListItemResponse> {
         if (params.key != null) pageIndex.set(params.key!!)
         else pageIndex.set(1)
         return try {
@@ -34,7 +33,7 @@ class PhotoListPagingSource @AssistedInject constructor(
                 )
             }
             if (resource is Resource.Success) {
-                val data = resource.data.photos.map { it.toDomain() }
+                val data = resource.data.photos
                 if (data.isNullOrEmpty()) {
                     sol.incrementAndGet()
                     return LoadResult.Page(
@@ -65,7 +64,7 @@ class PhotoListPagingSource @AssistedInject constructor(
     override val keyReuseSupported: Boolean
         get() = true
 
-    override fun getRefreshKey(state: PagingState<Int, PhotoListItem>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, PhotoListItemResponse>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)

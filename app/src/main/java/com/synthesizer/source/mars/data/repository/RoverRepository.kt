@@ -9,6 +9,7 @@ import com.synthesizer.source.mars.domain.mapper.toDomain
 import com.synthesizer.source.mars.util.map
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
@@ -21,7 +22,7 @@ class RoverRepository @Inject constructor(private val service: ApiService) {
                 service = service,
                 camera = camera
             )
-        }.flow
+        }.flow.map { it.toDomain() }
 
     fun fetchPhotoDetail(id: Int) = flow {
         emit(Resource.of { service.getPhotoDetail(id).map { it.toDomain() } })

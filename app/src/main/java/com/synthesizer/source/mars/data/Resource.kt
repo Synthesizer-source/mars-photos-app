@@ -2,7 +2,7 @@ package com.synthesizer.source.mars.data
 
 import retrofit2.Response
 
-sealed class Resource<T>() {
+sealed class Resource<T> {
     class Loading<T> : Resource<T>()
     class Success<T>(val data: T) : Resource<T>()
     class Failure<T>(val message: String?, val data: T? = null) : Resource<T>()

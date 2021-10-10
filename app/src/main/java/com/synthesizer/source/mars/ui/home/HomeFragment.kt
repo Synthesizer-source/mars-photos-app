@@ -24,7 +24,7 @@ class HomeFragment : Fragment() {
 
     private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
 
-    private var photoListAdapter = PhotoListAdapter()
+    private val photoListAdapter = PhotoListAdapter()
 
     private val viewModel: HomeViewModel by viewModels()
 
@@ -112,10 +112,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToPhotoDetail(id: Int) {
-        if (findNavController().currentDestination?.id == R.id.homeFragment) {
-            val action = HomeFragmentDirections.goToPhotoDetail(id)
-            findNavController().navigate(action)
-        }
+        if (findNavController().currentDestination?.id != R.id.homeFragment) return
+        val action = HomeFragmentDirections.goToPhotoDetail(id)
+        findNavController().navigate(action)
     }
 
     private fun showError(message: String) {

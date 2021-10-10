@@ -3,7 +3,6 @@ package com.synthesizer.source.mars.domain.mapper
 import com.synthesizer.source.mars.data.remote.PhotoDetailResponse
 import com.synthesizer.source.mars.domain.model.PhotoDetail
 import com.synthesizer.source.mars.util.capitalize
-import com.synthesizer.source.mars.util.getShortAndFullName
 
 fun PhotoDetailResponse.toDomain() =
     PhotoDetail(

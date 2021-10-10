@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val repository: RoverRepository) : BaseViewModel() {
 
-    private var _photoList = MutableLiveData<PagingData<PhotoListItem>>()
+    private val _photoList = MutableLiveData<PagingData<PhotoListItem>>()
     val photoList: LiveData<PagingData<PhotoListItem>> = _photoList
 
     private var _selectedRover: String = ""

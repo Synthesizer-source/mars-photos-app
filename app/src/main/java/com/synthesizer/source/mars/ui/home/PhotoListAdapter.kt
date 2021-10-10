@@ -16,7 +16,7 @@ class PhotoListAdapter :
 
     var itemClickListener: (id: Int) -> Unit = {}
     var firstItemLoadedListener: () -> Unit = {}
-    private var _isDataLoaded = AtomicBoolean(false)
+    private val _isDataLoaded = AtomicBoolean(false)
 
     init {
         addLoadStateListener {
